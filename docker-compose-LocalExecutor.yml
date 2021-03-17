@@ -11,23 +11,26 @@ services:
                 max-size: 10m
                 max-file: "3"
         container_name: postgres
+        volumes:
+            - ./postgres_home:/root/postgres_home
 
     webserver:
-        image: puckel/docker-airflow:latest
+        image: shepll/docker-airflow:latest
         restart: always
         depends_on:
             - postgres
         environment:
             - LOAD_EX=n
             - EXECUTOR=Local
-            - AIRFLOW__CORE__FERNET_KEY=<указать здесь сгенеренный ключ>
+            - AIRFLOW__CORE__FERNET_KEY=9dVU473cQDDn7iD18I3EvDSgio3lAc_Q66ZXrEAbpG4=
+            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
         logging:
             options:
                 max-size: 10m
                 max-file: "3"
         volumes:
-            - ./airflow_home:/usr/local/airflow/dags
-            - ./airflow_plugins:/usr/local/airflow/plugins
+            - /home/airflow/airflow_home:/usr/local/airflow/dags
+            - /home/airflow/airflow_plugins:/usr/local/airflow/plugins
         ports:
             - "8080:8080"
         command: webserver
